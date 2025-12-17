@@ -15,8 +15,10 @@ environment {
                 echo "build started"
                 sh 'mvn clean deploy'
                 echo "build completed"
-            }
-             stage('SonarQube analysis') {
+            }             
+        }
+
+        stage('SonarQube analysis') {
 				  environment {
 				  scannerHome = tool 'fqts-sonar-scanner'
                 }
@@ -26,6 +28,5 @@ environment {
                             }
                     }
             }
-        }
     }
 }
