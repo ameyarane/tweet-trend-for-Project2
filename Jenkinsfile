@@ -30,7 +30,7 @@ pipeline {
         
                     configFileProvider([
                         configFile(
-                            fileId: 'maven-settings',
+                            fileId: 'ac71b67a-7116-4485-9327-7a3e77af1dc1',
                             variable: 'MAVEN_SETTINGS'
                         )
                     ]) {
