@@ -115,12 +115,21 @@
 		</plugins>
 	</build>
 
-	<distributionManagement>
+	<!-- <distributionManagement>
 		<repository>
 			<id>dev</id>
 			<url>file://jarstaging</url>
 		</repository>
+	</distributionManagement> -->
+
+	<distributionManagement> 
+		<repository>
+			<id>artifactory</id>
+			<url>http://63.35.251.8:8082/artifactory/maven-libs-release-local</url>
+		</repository>
 	</distributionManagement>
+
+ 
 
 
 </project>

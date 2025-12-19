@@ -10,13 +10,40 @@ pipeline {
     }
 
     stages {
-        stage('build') {
+
+
+        // stage('build') {
+        //     steps {
+        //         echo "build started"
+        //         sh 'mvn clean deploy'
+        //         echo "build completed"
+        //     }
+        // }
+
+        stage('Build & Publish JAR') {
             steps {
-                echo "build started"
-                sh 'mvn clean deploy'
-                echo "build completed"
+                withCredentials([usernamePassword(
+                    credentialsId: 'jfrog-cred',
+                    usernameVariable: 'ART_USER',
+                    passwordVariable: 'ART_PASS'
+                )]) {
+        
+                    configFileProvider([
+                        configFile(
+                            fileId: 'maven-settings',
+                            variable: 'MAVEN_SETTINGS'
+                        )
+                    ]) {
+                        sh '''
+                        mvn -B clean deploy \
+                            -DskipTests \
+                            --settings $MAVEN_SETTINGS
+                        '''
+                    }
+                }
             }
         }
+
 
         stage('SonarQube analysis') {
             environment {
@@ -29,20 +56,6 @@ pipeline {
             }
         }
 
-        stage('Publish to Artifactory') {
-            steps {
-                rtUpload (
-                    serverId: 'jfrog-server-url', // Use your Jenkins Artifactory server ID
-                    spec: """{
-                      "files": [
-                        {
-                          "pattern": "target/*.jar",
-                          "target": "maven-libs-release-local/"
-                        }
-                      ]
-                    }"""
-                )
-            }
-        }
+        
     }
 }
