@@ -28,5 +28,24 @@ environment {
                             }
                     }
             }
+
+        stage('Publish to Artifactory') {
+            steps {
+                script {
+                    // Artifactory integration
+                    def server = Artifactory.server 'jfrog-server-url' // Change to your Artifactory server ID
+                    def uploadSpec = """{
+                      "files": [
+                        {
+                          "pattern": "target/*.jar",
+                          "target": "maven-libs-release-local/"
+                        }
+                      ]
+                    }"""
+                    // Upload JAR file(s)
+                    server.upload(uploadSpec)
+                }
+            }
+        }
     }
 }
