@@ -1,13 +1,13 @@
 pipeline {
     agent {
-            node {
-                label 'maven'
-            }
+        node {
+            label 'maven'
+        }
     }
 
-environment {
-    PATH = "/opt/apache-maven-3.9.11/bin:$PATH"
-}
+    environment {
+        PATH = "/opt/apache-maven-3.9.11/bin:$PATH"
+    }
 
     stages {
         stage('build') {
@@ -15,26 +15,25 @@ environment {
                 echo "build started"
                 sh 'mvn clean deploy'
                 echo "build completed"
-            }             
+            }
         }
 
         stage('SonarQube analysis') {
-				  environment {
-				  scannerHome = tool 'fqts-sonar-scanner'
-                }
-                    steps{
-                            withSonarQubeEnv('fqts-sonar-server') { 
-                            sh "${scannerHome}/bin/sonar-scanner"
-                            }
-                    }
+            environment {
+                scannerHome = tool 'fqts-sonar-scanner'
             }
+            steps {
+                withSonarQubeEnv('fqts-sonar-server') {
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }
+            }
+        }
 
         stage('Publish to Artifactory') {
             steps {
-                script {
-                    // Artifactory integration
-                    def server = Artifactory.server 'jfrog-server-url' // Change to your Artifactory server ID
-                    def uploadSpec = """{
+                rtUpload (
+                    serverId: 'jfrog-server-url', // Use your Jenkins Artifactory server ID
+                    spec: """{
                       "files": [
                         {
                           "pattern": "target/*.jar",
@@ -42,9 +41,7 @@ environment {
                         }
                       ]
                     }"""
-                    // Upload JAR file(s)
-                    server.upload(uploadSpec)
-                }
+                )
             }
         }
     }
