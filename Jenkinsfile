@@ -7,6 +7,8 @@ pipeline {
 
     environment {
         PATH = "/opt/apache-maven-3.9.11/bin:$PATH"
+        DOCKER_IMAGE_NAME = 'ttrend'
+        DOCKER_TAG = '2.1.3'
     }
 
     stages {
@@ -52,6 +54,16 @@ pipeline {
             steps {
                 withSonarQubeEnv('fqts-sonar-server') {
                     sh "${scannerHome}/bin/sonar-scanner"
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh """
+                    docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} .
+                    """
                 }
             }
         }
