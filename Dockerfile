@@ -1,3 +1,3 @@
-FROM openjdk:8
+FROM openjdk:27-ea-nanoserver-ltsc2025
 ADD jarstaging/com/valaxy/demo-workshop/2.1.3/demo-workshop-2.1.3.jar ttrend.jar 
 ENTRYPOINT [ "java", "-jar", "ttrend.jar" ]
