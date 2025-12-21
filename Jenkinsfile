@@ -68,6 +68,13 @@ pipeline {
             }
         }
 
-        
+        stage('Verify AWS Auth') {
+            steps {
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+                                    credentialsId: 'aws-cred']]) {
+                        sh 'aws sts get-caller-identity'
+                }
+            }
+        }        
     }
 }
