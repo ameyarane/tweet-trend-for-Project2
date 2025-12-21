@@ -125,7 +125,7 @@
 	<distributionManagement> 
 		<repository>
 			<id>artifactory</id>
-			<url>http://63.35.251.8:8082/artifactory/maven-libs-release-local</url>
+			<url>http://3.254.203.190:8082/artifactory/maven-libs-release-local</url>
 		</repository>
 	</distributionManagement>
 
