@@ -75,6 +75,45 @@ pipeline {
                         sh 'aws sts get-caller-identity'
                 }
             }
-        }        
+        }
+
+        stage('Push Image to AWS ECR') {
+
+            steps {
+
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+
+                                  credentialsId: 'aws-cred']]) {
+
+                    sh '''
+
+                      ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+
+                      ECR_REPO=949527796968.dkr.ecr.eu-west-1.amazonaws.com/project2/myapp
+ 
+                      echo "Logging in to ECR..."
+
+                      aws ecr get-login-password --region eu-west-1 \
+
+                        | docker login --username AWS --password-stdin ${ECR_REPO}
+ 
+                      echo "Tagging image..."
+
+                      docker tag ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} ${ECR_REPO}:${DOCKER_TAG}                      
+
+                      echo "Pushing image..."  
+                      
+                      docker push ${ECR_REPO}:${DOCKER_TAG}                      
+
+                      echo "Push completed..."  
+
+                    '''
+
+                }
+
+            }
+
+        }
+
     }
 }
