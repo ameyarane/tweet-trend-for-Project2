@@ -93,9 +93,7 @@ pipeline {
  
                       echo "Logging in to ECR..."
 
-                      aws ecr get-login-password --region eu-west-1 \
-
-                        | docker login --username AWS --password-stdin ${ECR_REPO}
+                      aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ${ECR_REPO}
  
                       echo "Tagging image..."
 
