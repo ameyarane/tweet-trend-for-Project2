@@ -113,12 +113,23 @@ pipeline {
 
         }
 
-        stage('deploy'){
+        // stage('deploy'){
+        //     steps {
+        //         script{
+        //             sh """
+        //             chmod 777 deploy.sh
+        //             ./deploy.sh
+        //             """
+        //         }
+        //     }
+        // }
+
+
+          stage('Deploy') {
             steps {
-                script{
+                script {
                     sh """
-                    chmod 777 deploy.sh
-                    ./deploy.sh
+                    helm install ttrend ttrend-0.1.0.tgz
                     """
                 }
             }
